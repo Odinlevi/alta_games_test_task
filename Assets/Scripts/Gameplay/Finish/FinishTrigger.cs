@@ -20,7 +20,7 @@ namespace Gameplay.Finish
         {
             if (other.TryGetComponent(out ShooterBall _))
             {
-                _gameplayStateMachine.Enter<EndState>();
+                _gameplayStateMachine.Enter<EndWinState>();
             }
         }
     }

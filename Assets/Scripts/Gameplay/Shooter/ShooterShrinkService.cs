@@ -1,6 +1,8 @@
 ﻿using System;
+using Gameplay.Input;
 using Gameplay.Interfaces;
 using UnityEngine;
+using VContainer;
 
 namespace Gameplay.Shooter
 {
@@ -9,6 +11,8 @@ namespace Gameplay.Shooter
         private const float ShrinkSpeed = 0.1f;
         
         public bool Enable { private get; set; }
+        
+        [Inject] private InputData _inputData; 
 
         public Vector3 GetShrinkedScale(Vector3 scale, float minimalScale)
         {
@@ -22,7 +26,7 @@ namespace Gameplay.Shooter
                 return scale;
             }
             
-            if (Input.GetMouseButton(0))
+            if (_inputData.HoldingAttackButton)
             {
                 return scale - Vector3.one * (ShrinkSpeed * Time.fixedDeltaTime);
                 

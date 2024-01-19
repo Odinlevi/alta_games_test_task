@@ -9,7 +9,7 @@ namespace Gameplay.Way
 {
     public class WayShrinkService : IGameloopInitable, IGameloopSwitchable
     {
-        [Inject] private ShooterBall _shooterBall;
+        [Inject] private ShooterBallData _shooterBallData;
         [Inject] private FinishObject _finishObject;
         
         private const float AdditionalScaleX = 1.5f;
@@ -23,10 +23,10 @@ namespace Gameplay.Way
                 return currentScale;
             }
 
-            var newScaleX = Mathf.Abs(_shooterBall.transform.position.x - _finishObject.transform.position.x) +
+            var newScaleX = Mathf.Abs(_shooterBallData.Transform.position.x - _finishObject.transform.position.x) +
                             AdditionalScaleX;
 
-            return new Vector3(newScaleX, currentScale.y, _shooterBall.transform.localScale.z);
+            return new Vector3(newScaleX, currentScale.y, _shooterBallData.Health);
         }
         
         public Vector3 GetNewPosition(Vector3 currentPosition)
@@ -36,7 +36,7 @@ namespace Gameplay.Way
                 return currentPosition;
             }
             
-            var newPositionX = (_shooterBall.transform.position.x + _finishObject.transform.position.x) / 2;
+            var newPositionX = (_shooterBallData.Transform.position.x + _finishObject.transform.position.x) / 2;
             
             return new Vector3(newPositionX, currentPosition.y, currentPosition.z);
         }

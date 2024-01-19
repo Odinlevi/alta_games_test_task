@@ -1,5 +1,6 @@
 ﻿using Gameplay.Obstacle;
 using UnityEngine;
+using VContainer;
 
 namespace Gameplay.Projectile
 {
@@ -13,24 +14,17 @@ namespace Gameplay.Projectile
 
         private Rigidbody _rigidbody;
 
-        private ProjectileGrowService _projectileGrowService;
-        private ProjectileMoveService _projectileMoveService;
+        [Inject] private ProjectileGrowService _projectileGrowService;
+        [Inject] private ProjectileMoveService _projectileMoveService;
+        [Inject] private ProjectileRegistrationService _projectileRegistrationService;
 
-        private BlowUpAreaFadeService _blowUpAreaFadeService;
+        [Inject] private BlowUpAreaFadeService _blowUpAreaFadeService;
 
-        private void Awake()
+        private void Start()
         {
             _rigidbody = GetComponent<Rigidbody>();
             GetComponent<CollisionHandler>().OnEnter += OnCollision;
-        }
-
-        public void Initialize(ProjectileGrowService projectileGrowService,
-            ProjectileMoveService projectileMoveService,
-            BlowUpAreaFadeService blowUpAreaFadeService)
-        {
-            _projectileGrowService = projectileGrowService;
-            _projectileMoveService = projectileMoveService;
-            _blowUpAreaFadeService = blowUpAreaFadeService;
+            _projectileRegistrationService.OnEnd += ProjectileDestroy;
         }
 
         private void FixedUpdate()
@@ -47,9 +41,9 @@ namespace Gameplay.Projectile
 
             var blowUpRadius = transform.localScale.x * _blowUpRadiusCoefficient;
             
-            _blowUpArea.Initialize(_blowUpAreaFadeService, blowUpRadius);
             _blowUpArea.gameObject.SetActive(true);
             _blowUpArea.transform.SetParent(transform.parent);
+            _blowUpArea.Initialize(_blowUpAreaFadeService, blowUpRadius);
             
             var colliders = Physics.OverlapSphere(transform.position, blowUpRadius);
             
@@ -57,10 +51,20 @@ namespace Gameplay.Projectile
             {
                 if (col.TryGetComponent(out ObstacleObject obstacleObject))
                 {
-                    obstacleObject.BlowUp();
+                    obstacleObject.Infect();
                 }
             }
             
+            Destroy(gameObject);
+        }
+        
+        private void OnDestroy()
+        {
+            _projectileRegistrationService.OnEnd -= ProjectileDestroy;
+        }
+        
+        private void ProjectileDestroy()
+        {
             Destroy(gameObject);
         }
     }

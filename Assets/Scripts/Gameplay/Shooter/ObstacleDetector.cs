@@ -40,12 +40,12 @@ namespace Gameplay.Shooter
             {
                 if (collider.TryGetComponent(out ObstacleObject _))
                 {
-                    _shooterMoveService.Enable = false;
+                    _shooterMoveService.ObstacleDetected = true;
                     return;
                 }
             }
             
-            _shooterMoveService.Enable = true;
+            _shooterMoveService.ObstacleDetected = false;
         }
         
         public void OnDrawGizmosSelected()

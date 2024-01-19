@@ -6,7 +6,7 @@ namespace Gameplay.Shooter
 {
     public class ObstacleDetectorShrinkingService : IGameloopInitable, IGameloopSwitchable
     {
-        [Inject] private ShooterBall _shooterBall;
+        [Inject] private ShooterBallData _shooterBallData;
         
         public bool Enable { private get; set; }
         
@@ -17,7 +17,7 @@ namespace Gameplay.Shooter
                 return currentRadius;
             }
             
-            return _shooterBall.transform.localScale.z * detectorToShooterCoefficient; 
+            return _shooterBallData.Health * detectorToShooterCoefficient; 
             
             // if (Input.GetMouseButton(0))
             // {

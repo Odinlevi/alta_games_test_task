@@ -1,4 +1,5 @@
-﻿using Gameplay.Interfaces;
+﻿using Gameplay.Input;
+using Gameplay.Interfaces;
 using UnityEngine;
 using VContainer;
 
@@ -7,6 +8,7 @@ namespace Gameplay.Projectile
     public class ProjectileResolverService : IGameloopSwitchable
     {
         [Inject] private ProjectileFactory _projectileFactory;
+        [Inject] private InputData _inputData;
         
         public bool Enable { private get; set; }
 
@@ -15,7 +17,7 @@ namespace Gameplay.Projectile
             if (!Enable) return projectile;
 
             
-            if (Input.GetMouseButtonDown(0))
+            if (_inputData.TouchedAttackButtonThisFrame)
             {
                 return _projectileFactory.GetProjectile(launchPoint);
             }

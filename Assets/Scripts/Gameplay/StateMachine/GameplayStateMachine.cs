@@ -3,9 +3,12 @@ using System.Collections.Generic;
 using FiniteStateMachine;
 using FiniteStateMachine.Interfaces;
 using Gameplay.Camera;
+using Gameplay.Doors;
+using Gameplay.Obstacle;
 using Gameplay.Projectile;
 using Gameplay.Shooter;
 using Gameplay.StateMachine.States;
+using Gameplay.UI;
 using Gameplay.Way;
 
 namespace Gameplay.StateMachine
@@ -20,14 +23,22 @@ namespace Gameplay.StateMachine
             ProjectileResolverService projectileResolverService,
             ProjectileGrowService projectileGrowService,
             ProjectileMoveService projectileMoveService,
+            ProjectileRegistrationService projectileRegistrationService,
             BlowUpAreaFadeService blowUpAreaFadeService,
-            CameraFollowService cameraFollowService
+            CameraFollowService cameraFollowService,
+            ObstacleColorService obstacleColorService,
+            ObstacleEnableService obstacleEnableService,
+            DoorsService doorsService,
+            GameplayUIController gameplayUIController
         ) : base(new Dictionary<Type, IState>())
         {
             States.Add(typeof(InitState), new InitState(this,
+                shooterMoveService,
                 shooterShrinkService,
                 obstacleDetectorShrinkingService,
-                wayShrinkService
+                wayShrinkService,
+                obstacleEnableService,
+                doorsService
                 )
             );
             
@@ -40,11 +51,17 @@ namespace Gameplay.StateMachine
                 projectileGrowService,
                 projectileMoveService,
                 blowUpAreaFadeService,
+                obstacleColorService,
                 cameraFollowService
                 )
             );
             
-            States.Add(typeof(EndState), new EndState());
+            States.Add(typeof(EndLoseState), new EndLoseState(gameplayUIController,
+                shooterMoveService,
+                projectileRegistrationService));
+            States.Add(typeof(EndWinState), new EndWinState(gameplayUIController, 
+                shooterMoveService,
+                projectileRegistrationService));
         }
     }
 }

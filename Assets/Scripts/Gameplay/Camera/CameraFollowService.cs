@@ -7,7 +7,7 @@ namespace Gameplay.Camera
 {
     public class CameraFollowService : IGameloopSwitchable
     {
-        [Inject] private ShooterBall _shooterBall;
+        [Inject] private ShooterBallData _shooterBallData;
         public bool Enable { get; set; }
         
         public Vector3 CalculatePosition(Vector3 targetPosition, Vector3 distance)
@@ -17,7 +17,7 @@ namespace Gameplay.Camera
                 return targetPosition;
             }
             
-            var shooterPos = _shooterBall.transform.position;
+            var shooterPos = _shooterBallData.Transform.position;
             
             return new Vector3(shooterPos.x + distance.x, distance.y, shooterPos.z + distance.z);
         }

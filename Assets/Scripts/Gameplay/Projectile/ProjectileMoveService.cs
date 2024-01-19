@@ -1,4 +1,5 @@
-﻿using Gameplay.Interfaces;
+﻿using Gameplay.Input;
+using Gameplay.Interfaces;
 using Gameplay.Shooter;
 using UnityEngine;
 using VContainer;
@@ -7,7 +8,8 @@ namespace Gameplay.Projectile
 {
     public class ProjectileMoveService : IGameloopSwitchable
     {
-        [Inject] private ShooterBall _shooterBall;
+        [Inject] private ShooterBallData _shooterBallData;
+        [Inject] private InputData _inputData;
         
         public bool Enable { private get; set; }
         
@@ -15,10 +17,10 @@ namespace Gameplay.Projectile
         {
             if (!Enable) return Vector3.zero;
 
-            if (!Input.GetMouseButton(0)) return direction * (Time.fixedDeltaTime * projectileSpeed);
-            if (_shooterBall.CurrentProjectileBall == null) return direction * (Time.fixedDeltaTime * projectileSpeed);
+            if (!_inputData.HoldingAttackButton) return direction * (Time.fixedDeltaTime * projectileSpeed);
+            if (_shooterBallData.CurrentProjectileBall == null) return direction * (Time.fixedDeltaTime * projectileSpeed);
             
-            if (_shooterBall.CurrentProjectileBall == projectileBall) return Vector3.zero;
+            if (_shooterBallData.CurrentProjectileBall == projectileBall) return Vector3.zero;
 
             return direction * (Time.fixedDeltaTime * projectileSpeed);
         }

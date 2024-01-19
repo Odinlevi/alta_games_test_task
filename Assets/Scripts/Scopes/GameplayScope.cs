@@ -1,8 +1,12 @@
 ﻿using Gameplay.Camera;
+using Gameplay.Doors;
 using Gameplay.Finish;
+using Gameplay.Input;
+using Gameplay.Obstacle;
 using Gameplay.Projectile;
 using Gameplay.Shooter;
 using Gameplay.StateMachine;
+using Gameplay.UI;
 using Gameplay.Way;
 using UnityEngine;
 using VContainer;
@@ -16,9 +20,12 @@ namespace Scopes
         [SerializeField] private FinishObject _finishObject;
         [SerializeField] private ProjectileFactory _projectileFactory;
         
+        [SerializeField] private GameplayUIController _uiController;
+        
         protected override void Configure(IContainerBuilder builder)
         {
-            builder.RegisterComponent(_shooterBall);
+            builder.RegisterEntryPoint<ShooterBallData>().AsSelf();
+            
             builder.RegisterComponent(_finishObject);
             
             builder.RegisterEntryPoint<ShooterShrinkService>().AsSelf();
@@ -32,10 +39,17 @@ namespace Scopes
             
             builder.RegisterEntryPoint<ProjectileGrowService>().AsSelf();
             builder.RegisterEntryPoint<ProjectileMoveService>().AsSelf();
+            builder.RegisterEntryPoint<ProjectileRegistrationService>().AsSelf();
             builder.RegisterEntryPoint<BlowUpAreaFadeService>().AsSelf();
             
             builder.RegisterEntryPoint<CameraFollowService>().AsSelf();
+
+            builder.RegisterEntryPoint<ObstacleColorService>().AsSelf();
+            builder.RegisterEntryPoint<ObstacleEnableService>().AsSelf();
+            builder.RegisterEntryPoint<DoorsService>().AsSelf();
             
+            builder.RegisterComponent(_uiController);
+            builder.RegisterEntryPoint<InputData>().AsSelf();
 
             builder.Register<GameplayStateMachine>(Lifetime.Singleton);
         }
